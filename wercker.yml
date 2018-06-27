@@ -1,11 +1,7 @@
 build:
-  box: google/golang
+  box: alpine
   docker: true
-  steps:
-    # Test the project
-    - script:
-        name: Unit tests
-        code: go test ./...     
+  steps: 
     - script:
         name: Install docker
         code: apk --no-cache add docker           
