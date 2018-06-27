@@ -4,7 +4,10 @@ build:
   steps: 
     - script:
         name: Install docker
-        code: apk --no-cache add docker           
+        code: apk --no-cache add docker    
+    - script:
+        name: Install Curl
+        code: apk --no-cache add curl         
     - script:
         name: Explore the docker daemon 
         code: |
@@ -22,7 +25,7 @@ build:
           echo running docker images
           docker images
     - script:
-        name: start the newly-created image using docker run (we can't do connect to this, so this is just for show)
+        name: start the newly-created image using docker run 
         code: |
           docker run --rm -d -p 5000:5000 --name container-test docker.io/$USERNAME/direct-docker-golang-$PROD_OR_STAGING:latest
           echo running docker ps
