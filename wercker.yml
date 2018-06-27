@@ -27,6 +27,22 @@ build:
           docker run --rm -d -p 5000:5000 --name container-test docker.io/$USERNAME/direct-docker-golang-$PROD_OR_STAGING:latest
           echo running docker ps
           docker ps
+     - script: 
+        name: Test the container that we started using docker-run
+        code: |
+            if curlOutput=`curl -s container-test:5000`; then 
+                export expected="Hello World!! $BUILDID"
+                if [ "$curlOutput" == "$expected" ]; then
+                    echo "Test passed: container gave expected response: " $expected
+                else
+                    echo "Test failed: container gave unexpected response: " $curlOutput
+                    echo "The expected response was: " $expected
+                    exit 1
+                fi   
+            else 
+                echo "Test failed: container did not respond"
+                exit 1
+            fi           
     - script:
         name: kill the container using docker kill
         code: |
