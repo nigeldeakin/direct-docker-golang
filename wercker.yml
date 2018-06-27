@@ -32,6 +32,10 @@ build:
           echo running docker ps
           docker ps
     - script: 
+        name: Wait for container to start 
+        code: | 
+          until $(curl --output /dev/null --silent --head --fail http://container-test:5000); do printf '.'; sleep 5; done           
+    - script: 
         name: Test the container that we started using docker-run
         code: |
             if curlOutput=`curl -s container-test:5000`; then 
