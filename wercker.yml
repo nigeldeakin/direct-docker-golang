@@ -41,7 +41,7 @@ build:
                 fi   
             else 
                 echo "Test failed: container did not respond"
-                exit 1
+                exit 1 
             fi           
     - script:
         name: kill the container using docker kill
