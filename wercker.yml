@@ -6,31 +6,39 @@ build:
     - script:
         name: Unit tests
         code: go test ./...     
-    - internal/docker-build: 
-        dockerfile: Dockerfile 
-        image-name: my-new-image # name used to refer to this image until it's pushed   
-    - internal/docker-run:
-        image: my-new-image
-        name: myTestContainer     
-    - script: 
-        name: Test the container
+    - script:
+        name: Install docker
+        code: apk --no-cache add docker           
+    - script:
+        name: Explore the docker daemon 
         code: |
-            if curlOutput=`curl -s myTestContainer:5000`; then 
-                if [ "$curlOutput" == "Hello World!!" ]; then
-                    echo "Test passed: container gave expected response"
-                else
-                    echo "Test failed: container gave unexpected response: " $curlOutput
-                    exit 1
-                fi   
-            else 
-                echo "Test failed: container did not respond"
-                exit 1
-            fi        
-    - internal/docker-kill:
-        name: myTestContainer               
-    - internal/docker-push: 
-        image-name: my-new-image
-        username: $USERNAME # Docker Hub username. When using CLI, set using "export X_USERNAME=<username>"  
-        password: $PASSWORD # Docker Hub password. When using CLI, set using "export X_PASSWORD=<password>" 
-        repository: docker.io/$USERNAME/docker-build-golang
-        tag: latest
+          echo DOCKER_HOST=$DOCKER_HOST
+          echo Running docker version
+          docker version
+          echo running docker ps
+          docker ps
+          echo running docker images
+          docker images
+    - script:
+        name: native docker build 
+        code: |
+          docker build -t docker.io/$USERNAME/direct-docker-golang-$PROD_OR_STAGING:latest .
+          echo running docker images
+          docker images
+    - script:
+        name: start the newly-created image using docker run (we can't do connect to this, so this is just for show)
+        code: |
+          docker run --rm -d -p 5000:5000 --name container-test docker.io/$USERNAME/direct-docker-golang-$PROD_OR_STAGING:latest
+          echo running docker ps
+          docker ps
+    - script:
+        name: kill the container using docker kill
+        code: |
+          docker kill container-test
+          echo running docker ps
+          docker ps
+    - script:
+        name: push the newly-create image to a repository
+        code: |
+          docker login -u $USERNAME -p $PASSWORD 
+          docker push docker.io/$USERNAME/direct-docker-golang-$PROD_OR_STAGING:latest
