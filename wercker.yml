@@ -25,8 +25,8 @@ build:
         name: start the newly-created image using docker run (we can't do connect to this, so this is just for show)
         code: |
           docker run --rm -d -p 5000:5000 --name container-test docker.io/$USERNAME/direct-docker-golang-$PROD_OR_STAGING:latest
-          echo running docker ps
-          docker ps
+          #echo running docker ps
+          #docker ps
      - script: 
         name: Test the container that we started using docker-run
         code: |
