@@ -19,6 +19,8 @@ build:
           docker ps
           echo running docker images
           docker images
+          echo listing the docker networks
+          docker network list
     - script:
         name: native docker build 
         code: |
