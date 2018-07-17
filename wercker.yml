@@ -22,15 +22,15 @@ build:
           echo listing the docker networks
           docker network list
     - script:
-        name: native docker build 
+        name: create an image from the Dockerfile using docker build 
         code: |
-          docker build -t docker.io/$USERNAME/direct-docker-golang-$PROD_OR_STAGING:latest .
+          docker build -t docker.io/$USERNAME/direct-docker-golang:latest .
           echo running docker images
           docker images
     - script:
         name: start the newly-created image using docker run 
         code: |
-          docker run --rm -d -p 5000:5000 --name container-test --network=$DOCKER_NETWORK_NAME docker.io/$USERNAME/direct-docker-golang-$PROD_OR_STAGING:latest
+          docker run --rm -d -p 5000:5000 --name container-test --network=$DOCKER_NETWORK_NAME docker.io/$USERNAME/direct-docker-golang:latest
           echo running docker ps
           docker ps
     - script: 
@@ -63,4 +63,4 @@ build:
         name: push the newly-create image to a repository
         code: |
           docker login -u $USERNAME -p $PASSWORD 
-          docker push docker.io/$USERNAME/direct-docker-golang-$PROD_OR_STAGING:latest
+          docker push docker.io/$USERNAME/direct-docker-golang:latest
