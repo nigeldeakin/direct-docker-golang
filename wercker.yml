@@ -57,7 +57,7 @@ build:
     - script:
         name: kill the container using docker kill
         code: |
-          docker kill container-test
+          docker kill testcontainer
           echo running docker ps
           docker ps
     - script:
